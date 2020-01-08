@@ -296,8 +296,8 @@ func notifyToUser(
     }
     title := tpls.Render("title", titleTemplate, data)
     desp := tpls.Render("desp", contentTemplate, data)
-    // 真正发推送
 
+    // 真正发推送
     for _, ch := range chans {
         rsp, body, err := req.Post(fmt.Sprintf("https://sc.ftqq.com/%s.send", ch.Key)).
             Type("form").
