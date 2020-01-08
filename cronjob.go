@@ -299,20 +299,20 @@ func notifyToUser(
     // 真正发推送
 
     for _, ch := range chans {
-        rsp, body, errs := req.Post(fmt.Sprintf("https://sc.ftqq.com/%s.send", ch.Key)).
+        rsp, body, err := req.Post(fmt.Sprintf("https://sc.ftqq.com/%s.send", ch.Key)).
             Type("form").
             Send(common.ServerChanRequest{
                 Text: title,
                 Desp: desp,
             }).End()
 
-        if nil != errs {
+        if nil != err {
             log.WithFields(log.Fields{
                 "name": app.Name,
                 "chan": ch.Key,
                 "rsp":  rsp,
                 "body": body,
-                "errs": errs,
+                "err":  err,
             }).Info("ServerChan推送消息失败")
         } else {
             log.WithFields(log.Fields{
