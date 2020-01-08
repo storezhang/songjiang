@@ -14,14 +14,14 @@ type Config struct {
 // Songjiang 程序整体配置
 type Songjiang struct {
     Debug          bool   `default:"false"`
-    LogLevel       string `default:"info"`
+    LogLevel       string `default:"info" yaml:"logLevel" toml:"logLevel"`
     Chans          []ServerChan
     Template       Template
-    BrowserWidth   int    `default:"1920"`
-    BrowserHeight  int    `default:"1080"`
-    BrowserTimeout string `default:"30m"`
+    BrowserWidth   int    `default:"1920" yaml:"browserWidth" toml:"browserWidth"`
+    BrowserHeight  int    `default:"1080" yaml:"browserHeight" toml:"browserHeight"`
+    BrowserTimeout string `default:"30m" yaml:"browserTimeout" toml:"browserTimeout"`
     Redo           string `default:"5m"`
-    RetryLimit     uint   `default:"30"`
+    RetryLimit     uint   `default:"30" yaml:"retryLimit" toml:"retryLimit"`
 }
 
 // App 应用配置
@@ -31,8 +31,8 @@ type App struct {
     Template  Template
     Type      string `default:"hao4k"`
     Cookies   string
-    StartTime string `default:"8:00"`
-    EndTime   string `default:"23:00"`
+    StartTime string `default:"8:00" yaml:"startTime" toml:"startTime"`
+    EndTime   string `default:"23:00" yaml:"endTime" toml:"endTime"`
 }
 
 // Template 模板配置

@@ -3,6 +3,7 @@ package main
 import (
     `flag`
     `fmt`
+    `os`
     `strings`
     `time`
 
@@ -21,7 +22,11 @@ func main() {
         AutoReload:         true,
         Silent:             true,
         AutoReloadInterval: time.Minute,
-    }).Load(conf, *confFilepath, "application.json", "application.ini")
+        AutoReloadCallback: func(config interface{}) {
+            log.Info("配置解析的域名有变化，退出程序重新解析")
+            os.Exit(0)
+        },
+    }).Load(conf, *confFilepath, "application.json", "application.toml")
 
     songjiang := conf.Songjiang
     if logLevel, err := log.ParseLevel(songjiang.LogLevel); nil != err {
