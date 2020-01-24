@@ -12,11 +12,11 @@ import (
 
 // Hao4k Hao4k对象
 type Hao4k struct {
-    SignSelector   string `default:"'#JD_sign'"`
-    SignedSelector string `default:"//span[contains(@class, 'btn btnvisted')]"`
-    SignUrl        string `default:"https://www.hao4k.cn/k_misign-sign.html"`
-    ScoreUrl       string `default:"https://www.hao4k.cn/home.php?mod=spacecp&ac=credit&showcredit=1"`
-    KBSelector     string `default:"//em[contains(text(), 'K币')]/.."`
+    SignSelector   string `default:"'#JD_sign'" yaml:"signSelector" toml:"signSelector"`
+    SignedSelector string `default:"//span[contains(@class, 'btn btnvisted')]" yaml:"signedSelector" toml:"signedSelector"`
+    SignUrl        string `default:"https://www.hao4k.cn/k_misign-sign.html" yaml:"signUrl" toml:"signUrl"`
+    ScoreUrl       string `default:"https://www.hao4k.cn/home.php?mod=spacecp&ac=credit&showcredit=1" yaml:"scoreUrl" toml:"scoreUrl"`
+    KBSelector     string `default:"//em[contains(text(), 'K币')]/.." yaml:"kbSelector" toml:"kbSelector"`
 }
 
 // AutoSign Hao4K的自动签到任务

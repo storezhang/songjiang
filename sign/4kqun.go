@@ -12,19 +12,20 @@ import (
 
 // G4KQun 4KQun对象
 type G4KQun struct {
-    SignSelector   string `default:"'#JD_sign'"`
-    SignedSelector string `default:"//h1[contains(text(), '您今天已经签到过了或者签到时间还未开始')]"`
-    SignUrl        string `default:"http://www.4kqun.com/plugin.php?id=dsu_paulsign:sign"`
-    ScoreUrl       string `default:"http://www.4kqun.com/home.php?mod=spacecp&ac=credit&showcredit=1"`
-    JBSelector     string `default:"//em[contains(text(), '金币')]/.."`
+    HomeUrl        string `default:"http://www.4kqun.com" yaml:"homeUrl" toml:"homeUrl"`
+    SignSelector   string `default:"'#JD_sign'" yaml:"signSelector" toml:"signSelector"`
+    SignedSelector string `default:"//h1[contains(text(), '您今天已经签到过了或者签到时间还未开始')]" yaml:"signedSelector" toml:"signedSelector"`
+    SignUrl        string `default:"http://www.4kqun.com/plugin.php?id=dsu_paulsign:sign" yaml:"signUrl" toml:"signUrl"`
+    ScoreUrl       string `default:"http://www.4kqun.com/home.php?mod=spacecp&ac=credit&showcredit=1" yaml:"scoreUrl" toml:"scoreUrl"`
+    JBSelector     string `default:"//em[contains(text(), '金币')]/.." yaml:"jbSelector" toml:"jbSelector"`
 }
 
 // AutoSign G4KQun的自动签到任务
 func (g4kQun *G4KQun) AutoSign(ctx context.Context, cookies string) (result AutoSignResult, err error) {
-    // 等待签到界面完成
+    // 进入主页
     if e := chromedp.Run(
         ctx,
-        chromedps.DefaultVisit(g4kQun.SignUrl, cookies),
+        chromedps.DefaultVisit(g4kQun.HomeUrl, cookies),
     ); nil != e {
         err = e
         log.WithFields(log.Fields{
