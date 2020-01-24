@@ -8,6 +8,7 @@ import (
 type Config struct {
     Songjiang Songjiang
     Hao4k     sign.Hao4k
+    G4kQun    sign.G4KQun
     Apps      []App
 }
 

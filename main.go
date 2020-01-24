@@ -49,6 +49,8 @@ func main() {
         switch strings.ToLower(app.Type) {
         case "hao4k":
             signer = &conf.Hao4k
+        case "4kqun":
+            signer = &conf.G4kQun
         default:
             log.WithFields(log.Fields{"type": app.Type}).Fatal("不支持该类型，请重新配置")
         }
