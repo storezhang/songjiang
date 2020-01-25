@@ -47,8 +47,6 @@ func init() {
     // 忽略TLS证书
     req.TLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 
-    // 初始化随机数
-    rand.Seed(time.Now().UnixNano())
     // 初始化缓存
     initJobCache()
 
@@ -120,6 +118,8 @@ func addJob(job *SongjiangJob) (jobId cron.EntryID) {
             return
         }
 
+        // 初始化随机数
+        rand.Seed(time.Now().UnixNano())
         if nowNano > startNano {
             runTime = now.Add(time.Duration(rand.Int63n(endNano - nowNano)))
         } else {
@@ -221,6 +221,9 @@ func (job *AutoSignJob) Run() {
 
         return err
     }
+
+    // 初始化随机数
+    rand.Seed(time.Now().UnixNano())
     how := retry.How{
         strategy.Limit(job.songjiang.RetryLimit),
         strategy.BackoffWithJitter(
