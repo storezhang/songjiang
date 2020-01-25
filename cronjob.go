@@ -221,9 +221,6 @@ func (job *AutoSignJob) Run() {
 
         return err
     }
-
-    // 初始化随机数
-    rand.Seed(time.Now().UnixNano())
     how := retry.How{
         strategy.Limit(job.songjiang.RetryLimit),
         strategy.BackoffWithJitter(
