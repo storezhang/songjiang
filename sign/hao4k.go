@@ -2,6 +2,7 @@ package sign
 
 import (
     `context`
+    `strings`
 
     `github.com/chromedp/chromedp`
     log `github.com/sirupsen/logrus`
@@ -37,7 +38,7 @@ func (hao4k *Hao4k) AutoSign(ctx context.Context, cookies string) (result AutoSi
     }
 
     // 签到前的K币
-    result.Before = getKB(ctx, hao4k)
+    result.Before = strings.TrimSpace(getKB(ctx, hao4k))
     // 确认是否已经签到
     if e := chromedp.Run(
         ctx,
@@ -79,7 +80,7 @@ func (hao4k *Hao4k) AutoSign(ctx context.Context, cookies string) (result AutoSi
         log.Info("成功点击签到按扭")
         // 签到后的K币
         result.Success = true
-        result.After = getKB(ctx, hao4k)
+        result.After = strings.TrimSpace(getKB(ctx, hao4k))
         result.Msg = "签到成功"
     }
 
