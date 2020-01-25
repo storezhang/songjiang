@@ -23,7 +23,7 @@ func main() {
         Silent:             true,
         AutoReloadInterval: time.Minute,
         AutoReloadCallback: func(config interface{}) {
-            log.Info("配置解析的域名有变化，退出程序重新解析")
+            log.Info("配置有变化，退出程序重新解析")
             os.Exit(0)
         },
     }).Load(conf, *confFilepath, "application.json", "application.toml")
@@ -66,6 +66,7 @@ func main() {
             }).Error("添加Songjiang任务失败")
         } else {
             log.WithFields(log.Fields{
+                "app":  app.Name,
                 "spec": spec,
                 "id":   id,
             }).Info("添加Songjiang任务成功")
