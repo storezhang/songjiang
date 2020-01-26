@@ -11,6 +11,7 @@ import (
     `github.com/chromedp/chromedp`
     `github.com/robfig/cron/v3`
     log `github.com/sirupsen/logrus`
+    `github.com/storezhang/gos/stringsx`
     `github.com/tj/go-naturaldate`
 
     `github.com/parnurzeal/gorequest`
@@ -24,13 +25,6 @@ import (
     `github.com/kamilsk/retry/v4/jitter`
     `github.com/kamilsk/retry/v4/strategy`
 )
-
-// SongjiangJob 动态域名解析任务
-type SongjiangJob struct {
-    signer    sign.Signer
-    songjiang *common.Songjiang
-    app       *common.App
-}
 
 var crontab *cron.Cron
 var jobCache map[string]cron.EntryID
@@ -69,6 +63,13 @@ func init() {
 
 var base = time.Now()
 
+// SongjiangJob 动态域名解析任务
+type SongjiangJob struct {
+    signer    sign.Signer
+    songjiang common.Songjiang
+    app       common.App
+}
+
 // Run 动态域名解析任务真正执行的方法
 func (job *SongjiangJob) Run() {
     if _, ok := jobCache[job.app.Cookies]; !ok {
@@ -103,9 +104,16 @@ func addJob(job *SongjiangJob) (jobId cron.EntryID) {
     now := time.Now()
     nowNano := now.UnixNano()
 
+    // 初始化随机数
+    rand.Seed(
+        time.Now().UnixNano() +
+            int64(stringsx.Hash64(job.app.Name)) +
+            int64(stringsx.Hash64(job.app.Type)) +
+            int64(stringsx.Hash64(job.app.Cookies)),
+    )
     var runTime time.Time
     if job.songjiang.Debug {
-        runTime = now.Add(3 * time.Second)
+        runTime = now.Add(time.Duration(rand.Intn(5)) * time.Second)
     } else {
         if nowNano > endNano {
             jobId = cron.EntryID(now.Nanosecond())
@@ -118,8 +126,6 @@ func addJob(job *SongjiangJob) (jobId cron.EntryID) {
             return
         }
 
-        // 初始化随机数
-        rand.Seed(time.Now().UnixNano())
         if nowNano > startNano {
             runTime = now.Add(time.Duration(rand.Int63n(endNano - nowNano)))
         } else {
@@ -162,8 +168,8 @@ func addJob(job *SongjiangJob) (jobId cron.EntryID) {
 // AutoSignJob 自动签到Job
 type AutoSignJob struct {
     signer    sign.Signer
-    app       *common.App
-    songjiang *common.Songjiang
+    app       common.App
+    songjiang common.Songjiang
     cookies   string
 }
 
@@ -253,7 +259,7 @@ func (job *AutoSignJob) Run() {
     }
 }
 
-func notify(app *common.App, songjiang *common.Songjiang, result *sign.AutoSignResult) {
+func notify(app common.App, songjiang common.Songjiang, result *sign.AutoSignResult) {
     var serverChans []common.ServerChan
     if nil != app.Chans && 0 < len(app.Chans) {
         serverChans = app.Chans
@@ -279,7 +285,7 @@ func notify(app *common.App, songjiang *common.Songjiang, result *sign.AutoSignR
 }
 
 type notifyData struct {
-    App    *common.App
+    App    common.App
     Result *sign.AutoSignResult
 }
 
@@ -287,7 +293,7 @@ func notifyToUser(
     chans []common.ServerChan,
     titleTemplate string,
     contentTemplate string,
-    app *common.App,
+    app common.App,
     result *sign.AutoSignResult,
 ) {
     data := &notifyData{

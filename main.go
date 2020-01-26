@@ -56,7 +56,7 @@ func main() {
         }
 
         // 增加启动立即执行
-        songjiangJob := &SongjiangJob{signer: signer, songjiang: &songjiang, app: &app}
+        songjiangJob := &SongjiangJob{signer: signer, songjiang: songjiang, app: app}
         // 真正的执行任务
         spec := fmt.Sprintf("@every %s", songjiang.Redo)
         if id, err := crontab.AddJob(spec, songjiangJob); nil != err {
