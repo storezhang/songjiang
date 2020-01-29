@@ -42,6 +42,28 @@ func (g4kQun *G4KQun) AutoSign(ctx context.Context, cookies string) (result Auto
 
     // 签到前的金币
     result.Before = strings.TrimSpace(getJB(ctx, g4kQun))
+    // 确认是否已经签到
+    if e := chromedp.Run(
+        ctx,
+        chromedps.DefaultSleep(),
+        chromedps.TasksWithTimeOut(&ctx, "30s", chromedp.Tasks{
+            chromedp.Navigate(g4kQun.SignUrl),
+            chromedp.WaitVisible(g4kQun.SignedSelector),
+        }),
+    ); nil != e {
+        log.Info("还没有签到，继续执行自动签到任务")
+    } else {
+        // 签到后的K币
+        result.Success = true
+        result.After = result.Before
+        result.Msg = "已签到，明天再来签到吧"
+
+        log.WithFields(log.Fields{
+            "cookies": cookies,
+        }).Info("已签到，明天再来签到吧")
+
+        return
+    }
 
     // 点击签到按扭
     if e := chromedp.Run(
