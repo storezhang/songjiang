@@ -16,6 +16,8 @@ type G4KQun struct {
     HomeUrl        string `default:"http://www.4kqun.com" yaml:"homeUrl" toml:"homeUrl"`
     SignedSelector string `default:"//h1[contains(text(), '您今天已经签到过了或者签到时间还未开始')]" yaml:"signedSelector" toml:"signedSelector"`
     SignUrl        string `default:"http://www.4kqun.com/plugin.php?id=dsu_paulsign:sign" yaml:"signUrl" toml:"signUrl"`
+    SignSelector   string `default:"//img[@src='source/plugin/dsu_paulsign/img/qdtb.gif']/.." yaml:"signSelector" toml:"signSelector"`
+    SignMood       string `default:"//ul[@class='qdsmile']//li[count(//node()|//@*) mod count(../li) + 1]" yaml:"signMood" toml:"signMood"`
     ScoreUrl       string `default:"http://www.4kqun.com/home.php?mod=spacecp&ac=credit&showcredit=1" yaml:"scoreUrl" toml:"scoreUrl"`
     JBSelector     string `default:"//em[contains(text(), '金币')]/.." yaml:"jbSelector" toml:"jbSelector"`
 }
@@ -44,8 +46,11 @@ func (g4kQun *G4KQun) AutoSign(ctx context.Context, cookies string) (result Auto
     if e := chromedp.Run(
         ctx,
         chromedps.DefaultSleep(),
+        chromedp.Navigate(g4kQun.SignUrl),
+        chromedps.DefaultSleep(),
         chromedps.TasksWithTimeOut(&ctx, "30m", chromedp.Tasks{
-            chromedp.Navigate(g4kQun.SignUrl),
+            chromedp.Click(g4kQun.SignMood, chromedp.NodeVisible),
+            chromedp.Click(g4kQun.SignSelector, chromedp.NodeVisible),
             chromedp.WaitVisible(g4kQun.SignedSelector),
         }),
     ); nil != e {
