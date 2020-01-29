@@ -17,6 +17,7 @@ type G4KQun struct {
     SignedSelector string `default:"//h1[contains(text(), '您今天已经签到过了或者签到时间还未开始')]" yaml:"signedSelector" toml:"signedSelector"`
     SignUrl        string `default:"http://www.4kqun.com/plugin.php?id=dsu_paulsign:sign" yaml:"signUrl" toml:"signUrl"`
     SignSelector   string `default:"//img[@src='source/plugin/dsu_paulsign/img/qdtb.gif']/.." yaml:"signSelector" toml:"signSelector"`
+    // 随机选择子节点
     SignMood       string `default:"//ul[@class='qdsmile']//li[count(//node()|//@*) mod count(../li) + 1]" yaml:"signMood" toml:"signMood"`
     ScoreUrl       string `default:"http://www.4kqun.com/home.php?mod=spacecp&ac=credit&showcredit=1" yaml:"scoreUrl" toml:"scoreUrl"`
     JBSelector     string `default:"//em[contains(text(), '金币')]/.." yaml:"jbSelector" toml:"jbSelector"`
